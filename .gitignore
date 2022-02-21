@@ -2,3 +2,5 @@ OCamlMakefile
 *.top
 *.cmi
 *.cmo
+._bcdi/
+._d/
