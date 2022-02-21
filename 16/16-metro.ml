@@ -76,7 +76,7 @@ let rec seiretsu lst = match lst with
 
 (* 直前に確定した駅p(eki_t型)と未確定の駅リスト(eki_t list型)を受け取り *)
 (* リストの要素に対して必要な更新を行いそれを返す *)
-(* koushin : eki_t -> eki_t list -> eki_t list *)
+(* koushin : eki_t -> eki_t list -> ekikan_t list -> eki_t list *) 
 let koushin p v ekikan_list= 
     List.map(fun q ->
         let kyori = get_ekikan_kyori p.namae q.namae ekikan_list in
