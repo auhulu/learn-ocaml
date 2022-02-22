@@ -1,16 +1,4 @@
-(* #use "metro.ml" *)
 open Metro_data
-
-(* ダイクストラ用の駅情報を格納するレコード型 *)
-type eki_t = {namae: string; saitan_kyori: float; temae_list: string list}
-
-type ekikan_tree_t =
-  | Empty
-  | Node of ekikan_tree_t * string * (string * float) list * ekikan_tree_t
-
-exception Not_found
-
-exception No_such_station of string
 
 (* ローマ字の駅名と駅名リストを受け取りその漢字表記を返す *)
 (* romaji_to_kanji : string -> ekimei_t list -> string *)
@@ -28,15 +16,19 @@ let rec assoc ekimei lst = match lst with
         if ekimei = eki then kyori
         else assoc ekimei rest
 
+(* 二分探索木のモジュールを使用した形にリファクタ *)
 (* ekikan_tree_t型の木とekimei1,ekimei2,kyoriを受け取り *)
 (* ekimei1のノードに{ekimei2,kyori}を挿入した木を返す *)
 (* insert_half: ekikan_tree_t -> string -> string ->float ->ekikan_tree_t *)
-let rec insert_half tree ekimei1 ekimei2 kyori = match tree with
+(* let rec insert_half tree ekimei1 ekimei2 kyori = match tree with
     | Empty -> Node(Empty, ekimei1,[(ekimei2, kyori)], Empty)
     | Node(t1, ekimei, lst, t2) ->
         if ekimei1 = ekimei then Node(t1, ekimei, (ekimei2, kyori)::lst, t2)
         else if ekimei1 < ekimei then Node(insert_half t1 ekimei1  ekimei2 kyori, ekimei, lst, t2)
-        else Node(t1, ekimei, lst, insert_half t2 ekimei1 ekimei2 kyori)
+        else Node(t1, ekimei, lst, insert_half t2 ekimei1 ekimei2 kyori) *)
+
+let rec insert_half tree ekimei1 ekimei2 kyori = 
+    let tmp_lst = try Tree.search tree ekimei1 with Not_found -> [] in Tree.insert tree ekimei1 ((ekimei2, kyori)::tmp_lst)
 
 (* ekikan_tree_t型の木とekitan_t型の駅間を受け取り *)
 (* その情報を挿入した木を返す *)
@@ -61,9 +53,9 @@ let rec get_ekikan_kyori ekimei1 ekimei2 tree = match tree with
         else if ekimei1 < ekimei then get_ekikan_kyori ekimei1 ekimei2 t1
         else get_ekikan_kyori ekimei1 ekimei2 t2
 
-(* let rec get_ekikan_kyori ekimei1 ekimei2 tree = 
-    let tmp_lst = Tree.search tree ekimei1
-    in  assoc ekimei2 tmp_lst *)
+let rec get_ekikan_kyori ekimei1 ekimei2 tree = 
+    let tmp_lst = try Tree.search tree ekimei1 with Not_found -> raise Not_found
+    in  assoc ekimei2 tmp_lst
 
 (* make_eki_listとshokikaを1つにまとめて処理 *)
 (* make_initial_eki_list : ekimei_t list -> string ->eki_t list *)
@@ -149,6 +141,6 @@ let dijkstra romaji_shiten romaji_shuten =
     let kanji_shiten = romaji_to_kanji romaji_shiten ekimei_list in 
     let kanji_shuten = romaji_to_kanji romaji_shuten ekimei_list in
     let eki_list = make_initial_eki_list ekimei_list kanji_shiten in
-    let ekikan_tree = inserts_ekikan Empty global_ekikan_list in
+    let ekikan_tree = inserts_ekikan Tree.empty global_ekikan_list in
     let new_eki_list = dijkstra_main eki_list ekikan_tree in 
     find kanji_shuten new_eki_list

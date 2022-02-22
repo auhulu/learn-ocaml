@@ -13,6 +13,14 @@ type ekikan_t = {
   jikan  : int;    (* 時間 *) 
 } 
 
+type eki_t = {namae: string; saitan_kyori: float; temae_list: string list}
+
+type ekikan_tree_t =
+  | Empty
+  | Node of ekikan_tree_t * string * (string * float) list * ekikan_tree_t
+
+exception No_such_station of string
+
 let global_ekimei_list = [ 
 {kanji="代々木上原"; kana="よよぎうえはら"; romaji="yoyogiuehara"; shozoku="千代田線"}; 
 {kanji="代々木公園"; kana="よよぎこうえん"; romaji="yoyogikouen"; shozoku="千代田線"}; 
