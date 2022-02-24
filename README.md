@@ -22,8 +22,10 @@ use "プログラム名" ;;
 exit 0;;
 ```
 ## 模範解答
-著者ページ  
-http://pllab.is.ocha.ac.jp/~asai/book-data/
+- http://pllab.is.ocha.ac.jp/~asai/book-data/  
+著者ページ
+- https://github.com/numb86/learn-ocaml
+- https://github.com/nloglogn/ocaml-asai
 
 ## 分割コンパイル
 - OCamlMakefileはここで入手  
