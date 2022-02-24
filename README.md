@@ -21,6 +21,9 @@ use "プログラム名" ;;
 #終了  
 exit 0;;
 ```
+## 模範解答
+著者ページ  
+http://pllab.is.ocha.ac.jp/~asai/book-data/
 
 ## 分割コンパイル
 - OCamlMakefileはここで入手  
@@ -28,3 +31,7 @@ https://github.com/mmottl/ocaml-makefile/blob/master/OCamlMakefile
 - ディレクトリにOCamlMakefileとMakefileを配置しmake topでhoge.topが生成
 - ./hoge.topで実行
 - del.shで余計な諸々を一括で削除
+
+## TODO
+- ヒープモジュールの実装
+- メトロプログラムをヒープを使った実装にリファクタ
